@@ -31,6 +31,10 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/gpu-generations">GPU Generations</a> <!-- Link to GPU generations section -->
                     </li>
+                    <!-- Modify this link to point to GPU Models -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="/gpu-models">GPU Models</a> <!-- Link to GPU models section -->
+                    </li>
 
                     <!-- Check if user is authenticated -->
                     @if(Auth::check())

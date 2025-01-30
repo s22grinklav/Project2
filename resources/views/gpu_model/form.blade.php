@@ -1,0 +1,134 @@
+@extends('layout')
+
+@section('content')
+<h1>{{ $title }}</h1>
+
+<!-- Show general error message if there are validation errors -->
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <strong>Please fix the validation errors!</strong>
+    </div>
+@endif
+
+<form method="post" action="{{ $gpuModel->exists ? '/gpu-models/patch/' . $gpuModel->id : '/gpu-models/put' }}">
+    @csrf
+
+    <!-- Name Field -->
+    <div class="mb-3">
+        <label for="gpu-model-name" class="form-label">Name</label>
+        <input
+            type="text"
+            id="gpu-model-name"
+            name="name"
+            value="{{ old('name', $gpuModel->name) }}"
+            class="form-control @error('name') is-invalid @enderror"
+        >
+        @error('name')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
+
+    <!-- Generation Field -->
+    <div class="mb-3">
+        <label for="gpu-model-generation" class="form-label">Generation</label>
+        <select
+            id="gpu-model-generation"
+            name="generation_id"
+            class="form-select @error('generation_id') is-invalid @enderror"
+        >
+            <option value="">Choose the generation!</option>
+            @foreach($generations as $generation)
+                <option
+                    value="{{ $generation->id }}"
+                    @if ($generation->id == old('generation_id', $gpuModel->generation->id ?? false)) selected @endif
+                >
+                    {{ $generation->name }}
+                </option>
+            @endforeach
+        </select>
+        @error('generation_id')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
+
+    <!-- Base Clock Field -->
+    <div class="mb-3">
+        <label for="gpu-model-base-clock" class="form-label">Base Clock (MHz)</label>
+        <input
+            type="number"
+            id="gpu-model-base-clock"
+            name="base_clock"
+            value="{{ old('base_clock', $gpuModel->base_clock) }}"
+            class="form-control @error('base_clock') is-invalid @enderror"
+        >
+        @error('base_clock')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
+
+    <!-- Boost Clock Field -->
+    <div class="mb-3">
+        <label for="gpu-model-boost-clock" class="form-label">Boost Clock (MHz)</label>
+        <input
+            type="number"
+            id="gpu-model-boost-clock"
+            name="boost_clock"
+            value="{{ old('boost_clock', $gpuModel->boost_clock) }}"
+            class="form-control @error('boost_clock') is-invalid @enderror"
+        >
+        @error('boost_clock')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
+
+    <!-- VRAM Field -->
+    <div class="mb-3">
+        <label for="gpu-model-vram" class="form-label">VRAM (GB)</label>
+        <input
+            type="number"
+            id="gpu-model-vram"
+            name="vram"
+            value="{{ old('vram', $gpuModel->vram) }}"
+            class="form-control @error('vram') is-invalid @enderror"
+        >
+        @error('vram')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
+
+    <!-- Memory Type Field -->
+    <div class="mb-3">
+        <label for="gpu-model-memory-type" class="form-label">Memory Type</label>
+        <input
+            type="text"
+            id="gpu-model-memory-type"
+            name="memory_type"
+            value="{{ old('memory_type', $gpuModel->memory_type) }}"
+            class="form-control @error('memory_type') is-invalid @enderror"
+        >
+        @error('memory_type')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
+
+    <!-- CUDA Cores Field (Adding missing field) -->
+    <div class="mb-3">
+        <label for="gpu-model-cuda-cores" class="form-label">CUDA Cores</label>
+        <input
+            type="number"
+            id="gpu-model-cuda-cores"
+            name="cuda_cores"
+            value="{{ old('cuda_cores', $gpuModel->cuda_cores) }}"
+            class="form-control @error('cuda_cores') is-invalid @enderror"
+        >
+        @error('cuda_cores')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" class="btn btn-primary">
+        {{ $gpuModel->exists ? 'Update' : 'Create' }}
+    </button>
+</form>
+@endsection

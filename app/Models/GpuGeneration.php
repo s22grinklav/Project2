@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class GpuGeneration extends Model
 {
@@ -22,4 +23,14 @@ class GpuGeneration extends Model
 
     // If you don't want to use timestamps (created_at, updated_at) set this to false
     // public $timestamps = false;
+
+    /**
+     * Get all the GPU models associated with this generation.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function gpuModels(): HasMany
+    {
+        return $this->hasMany(GpuModel::class, 'generation_id'); // 'generation_id' is the foreign key in gpu_models table
+    }
 }
