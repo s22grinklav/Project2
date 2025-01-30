@@ -55,27 +55,20 @@ class GpuModelController extends Controller implements HasMiddleware
     // Store a new GPU model in the database
     public function put(Request $request): RedirectResponse
     {
-        // Debugging: Dump and die the request data
-        // This will help inspect the input data before the validation
-        //dd($request->all());
-
         // Validate the input data
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'generation_id' => 'required|exists:gpu_generations,id', // Ensure generation exists
+            'generation_id' => 'required|exists:gpu_generations,id',
             'base_clock' => 'required|integer',
             'boost_clock' => 'required|integer',
             'cuda_cores' => 'required|integer',
             'memory_type' => 'required|string',
             'vram' => 'required|integer',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:10240', // Image validation
         ]);
-        // Add this for debugging validation errors
-        //dd($request->errors()); 
-        // Debugging: Show validated data
-        //dd($validated);  // This will show the validated data after validation
 
-        // Create a new GPU model with the validated data
-        GpuModel::create([
+        // Create a new GPU model
+        $gpuModel = GpuModel::create([
             'name' => $validated['name'],
             'generation_id' => $validated['generation_id'],
             'base_clock' => $validated['base_clock'],
@@ -85,7 +78,23 @@ class GpuModelController extends Controller implements HasMiddleware
             'vram' => $validated['vram'],
         ]);
 
-        // Redirect back to the GPU models list
+        // Handle image upload if the image is present
+        if ($request->hasFile('image')) {
+            $uploadedFile = $request->file('image');
+            $extension = $uploadedFile->getClientOriginalExtension();
+            $name = uniqid();
+            
+            // Save the image in the 'uploads' disk
+            $gpuModel->image = $uploadedFile->storePubliclyAs(
+                '/',
+                $name . '.' . $extension,
+                'uploads'  // This uses the 'uploads' disk from config/filesystems.php
+            );
+            
+            $gpuModel->save(); // Save the model after setting the image path
+        }
+
+        // Redirect back to the GPU models list with success message
         return redirect('/gpu-models')->with('success', 'GPU Model created successfully!');
     }
 
@@ -106,9 +115,6 @@ class GpuModelController extends Controller implements HasMiddleware
     // Update the GPU model in the database
     public function patch(Request $request, GpuModel $gpuModel): RedirectResponse
     {
-        // Debugging: Dump and die the request data
-        //dd($request->all());
-
         // Validate the input data
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -118,10 +124,8 @@ class GpuModelController extends Controller implements HasMiddleware
             'cuda_cores' => 'required|integer',
             'memory_type' => 'required|string',
             'vram' => 'required|integer',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:10240', // Image validation
         ]);
-
-        // Debugging: Show validated data
-        //dd($validated);  // This will show the validated data after validation
 
         // Update the GPU model with the new data
         $gpuModel->update([
@@ -134,6 +138,28 @@ class GpuModelController extends Controller implements HasMiddleware
             'vram' => $validated['vram'],
         ]);
 
+        // If an image is uploaded, replace the old one and save the new one
+        if ($request->hasFile('image')) {
+            // Delete the old image file if exists
+            if ($gpuModel->image) {
+                unlink(public_path('images/' . $gpuModel->image));
+            }
+
+            // Handle the new uploaded image
+            $uploadedFile = $request->file('image');
+            $extension = $uploadedFile->getClientOriginalExtension();
+            $name = uniqid();
+
+            // Save the new image in the 'uploads' directory
+            $gpuModel->image = $uploadedFile->storePubliclyAs(
+                '/',
+                $name . '.' . $extension,
+                'uploads'  // Save it using the 'uploads' disk defined in filesystems.php
+            );
+
+            $gpuModel->save(); // Save the GPU model after updating the image path
+        }
+
         // Redirect back to the GPU models list with success message
         return redirect('/gpu-models')->with('success', 'GPU Model updated successfully!');
     }
@@ -141,10 +167,13 @@ class GpuModelController extends Controller implements HasMiddleware
     // Delete a GPU model from the database
     public function delete(GpuModel $gpuModel): RedirectResponse
     {
-        // Debugging: Dump the GPU model data before deleting it
-        //dd($gpuModel);  // Check the GPU model data before deletion
+        // Check if the model has an image and delete it from the storage
+        if ($gpuModel->image) {
+            // Delete the image file from the 'images' directory
+            unlink(public_path('images/' . $gpuModel->image));
+        }
 
-        // Delete the GPU model
+        // Delete the GPU model from the database
         $gpuModel->delete();
 
         // Redirect back to the GPU models list

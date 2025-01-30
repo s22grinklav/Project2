@@ -47,6 +47,14 @@ return [
             'report' => false,
         ],
 
+        'uploads' => [
+            'driver' => 'local',
+            'root' => public_path('images'), // Path to the 'images' directory
+            'url' => env('APP_URL') . '/images', // URL for accessing the images
+            'visibility' => 'public', // Make sure images are publicly accessible
+        ],
+
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

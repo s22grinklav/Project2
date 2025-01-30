@@ -79,5 +79,6 @@
         integrity="sha384-w76A4PnxFnz3gK16gOxSnu1SdPp3+AXYu1M8mBESz1F8vcBuOhc+g+Yw4uANNC7x" 
         crossorigin="anonymous">
     </script>
+    <script src="/js/admin.js"></script>
 </body>
 </html>

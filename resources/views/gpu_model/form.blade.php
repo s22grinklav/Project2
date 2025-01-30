@@ -10,7 +10,8 @@
     </div>
 @endif
 
-<form method="post" action="{{ $gpuModel->exists ? '/gpu-models/patch/' . $gpuModel->id : '/gpu-models/put' }}">
+<!-- Form for creating or updating GPU model -->
+<form method="post" action="{{ $gpuModel->exists ? '/gpu-models/patch/' . $gpuModel->id : '/gpu-models/put' }}" enctype="multipart/form-data">
     @csrf
 
     <!-- Name Field -->
@@ -111,7 +112,7 @@
         @enderror
     </div>
 
-    <!-- CUDA Cores Field (Adding missing field) -->
+    <!-- CUDA Cores Field -->
     <div class="mb-3">
         <label for="gpu-model-cuda-cores" class="form-label">CUDA Cores</label>
         <input
@@ -126,9 +127,32 @@
         @enderror
     </div>
 
+    <!-- Image Upload Field -->
+    <div class="mb-3">
+        <label for="gpu-model-image" class="form-label">Image</label>
+        <!-- Display existing image if it exists -->
+        @if ($gpuModel->image)
+            <img src="{{ asset('images/' . $gpuModel->image) }}" class="img-fluid img-thumbnail d-block mb-2" alt="{{ $gpuModel->name }}">
+        @endif
+
+        <!-- File input for new image upload -->
+        <input
+            type="file"
+            id="gpu-model-image"
+            name="image"
+            accept="image/png, image/webp, image/jpeg"
+            class="form-control @error('image') is-invalid @enderror"
+        >
+
+        @error('image')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
+
     <!-- Submit Button -->
     <button type="submit" class="btn btn-primary">
         {{ $gpuModel->exists ? 'Update' : 'Create' }}
     </button>
 </form>
+
 @endsection
