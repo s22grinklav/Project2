@@ -28,8 +28,8 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            // We’ll later change redirect URL to /gpus
-            return redirect('/gpus');
+            //redirects to  gpu-generations
+            return redirect('/gpu-generations');
         }
 
         return back()->withErrors([

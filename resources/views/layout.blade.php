@@ -19,7 +19,7 @@
     <!-- Navigation block -->
     <nav class="navbar navbar-expand-md bg-primary mb-3" data-bs-theme="dark">
         <div class="container">
-            <span class="navbar-brand mb-0 h1">Project 2</span> <!-- Your project name -->
+            <span class="navbar-brand mb-0 h1">Project 2</span> <!-- Project name -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -29,7 +29,7 @@
                         <a class="nav-link" href="/">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/gpus">GPUs</a> <!-- Link to your GPUs section -->
+                        <a class="nav-link" href="/gpu-generations">GPU Generations</a> <!-- Link to GPU generations section -->
                     </li>
 
                     <!-- Check if user is authenticated -->
@@ -53,7 +53,7 @@
     <main class="container">
         <div class="row">
             <div class="col">
-                @yield('content') <!-- This is where content from your views will be injected -->
+                @yield('content') <!-- This is where content from views will be injected -->
             </div>
         </div>
     </main>
