@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\GpuModel;
 use App\Models\GpuGeneration;
+use App\Models\GpuArchitecture; // Import the GpuArchitecture model
 use App\Http\Requests\GpuModelRequest;  // Import the GpuModelRequest
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -21,8 +22,8 @@ class GpuModelController extends Controller
     // List all GPU Models (view method)
     public function list(): View
     {
-        // Fetch all GPU models in ascending order by name
-        $items = GpuModel::orderBy('name', 'asc')->get();
+        // Fetch all GPU models with eager loaded relationships for generation and architecture
+        $items = GpuModel::with(['generation', 'architecture'])->orderBy('name', 'asc')->get();
 
         // Return the 'gpu_model.list' view with title and items data
         return view('gpu_model.list', [
@@ -34,14 +35,16 @@ class GpuModelController extends Controller
     // Show form to create a new GPU model
     public function create(): View
     {
-        // Retrieve all GPU generations for selection
+        // Retrieve all GPU generations and architectures for selection
         $generations = GpuGeneration::all();
+        $architectures = GpuArchitecture::all();  // Retrieve all GPU architectures
 
         // Return the view for creating a new GPU model with title
         return view('gpu_model.form', [
             'title' => 'Create New GPU Model',  // Add the title here
             'gpuModel' => new GpuModel(),      // Pass the empty GPU model instance
-            'generations' => $generations      // Pass the generations for selection
+            'generations' => $generations,     // Pass the generations for selection
+            'architectures' => $architectures // Pass the architectures for selection
         ]);
     }
 
@@ -83,14 +86,16 @@ class GpuModelController extends Controller
     // Show the form to update an existing GPU model
     public function update(GpuModel $gpuModel): View
     {
-        // Retrieve all GPU generations for selection
+        // Retrieve all GPU generations and architectures for selection
         $gpuGenerations = GpuGeneration::all();
+        $gpuArchitectures = GpuArchitecture::all(); // Retrieve all GPU architectures
 
         // Return the view for updating the GPU model with title
         return view('gpu_model.form', [
             'title' => 'Edit GPU Model',
-            'gpuModel' => $gpuModel,      // Pass the GPU model instance
-            'generations' => $gpuGenerations // Pass the generations for selection
+            'gpuModel' => $gpuModel,         // Pass the GPU model instance
+            'generations' => $gpuGenerations, // Pass the generations for selection
+            'architectures' => $gpuArchitectures // Pass the architectures for selection
         ]);
     }
 

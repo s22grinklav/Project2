@@ -52,6 +52,29 @@
         @enderror
     </div>
 
+    <!-- GPU Architecture Field -->
+    <div class="mb-3">
+        <label for="gpu-model-architecture" class="form-label">Architecture</label>
+        <select
+            id="gpu-model-architecture"
+            name="gpu_architecture_id"
+            class="form-select @error('gpu_architecture_id') is-invalid @enderror"
+        >
+            <option value="">Choose the architecture!</option>
+            @foreach($architectures as $architecture)
+                <option
+                    value="{{ $architecture->id }}"
+                    @if ($architecture->id == old('gpu_architecture_id', $gpuModel->gpu_architecture_id ?? false)) selected @endif
+                >
+                    {{ $architecture->name }}
+                </option>
+            @endforeach
+        </select>
+        @error('gpu_architecture_id')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
+
     <!-- Base Clock Field -->
     <div class="mb-3">
         <label for="gpu-model-base-clock" class="form-label">Base Clock (MHz)</label>

@@ -31,9 +31,13 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/gpu-generations">GPU Generations</a> <!-- Link to GPU generations section -->
                     </li>
-                    <!-- Modify this link to point to GPU Models -->
+                    <!-- Link to GPU Models section -->
                     <li class="nav-item">
-                        <a class="nav-link" href="/gpu-models">GPU Models</a> <!-- Link to GPU models section -->
+                        <a class="nav-link" href="/gpu-models">GPU Models</a>
+                    </li>
+                    <!-- Link to GPU Architectures section -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="/gpu-architectures">GPU Architectures</a>
                     </li>
 
                     <!-- Check if user is authenticated -->

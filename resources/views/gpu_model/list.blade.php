@@ -10,6 +10,7 @@
                 <th>ID</th>
                 <th>Name</th>
                 <th>Generation</th>
+                <th>Architecture</th> <!-- Added Architecture Column -->
                 <th>Base Clock</th>
                 <th>Boost Clock</th>
                 <th>CUDA Cores</th>
@@ -30,12 +31,20 @@
                         @else
                             No Generation
                         @endif
-                    </td> <!-- Relating GPU generation -->
-                    <td>{{ $gpuModel->base_clock }} MHz</td> <!-- Display base clock -->
-                    <td>{{ $gpuModel->boost_clock }} MHz</td> <!-- Display boost clock -->
-                    <td>{{ $gpuModel->cuda_cores }}</td> <!-- Display CUDA cores -->
-                    <td>{{ $gpuModel->memory_type }}</td> <!-- Display memory type -->
-                    <td>{{ $gpuModel->vram }} GB</td> <!-- Display VRAM -->
+                    </td> 
+                    <td>
+                        <!-- Check if the architecture relationship exists -->
+                        @if ($gpuModel->architecture)
+                            {{ $gpuModel->architecture->name }}
+                        @else
+                            No Architecture
+                        @endif
+                    </td> <!-- Display Architecture -->
+                    <td>{{ $gpuModel->base_clock }} MHz</td>
+                    <td>{{ $gpuModel->boost_clock }} MHz</td>
+                    <td>{{ $gpuModel->cuda_cores }}</td>
+                    <td>{{ $gpuModel->memory_type }}</td>
+                    <td>{{ $gpuModel->vram }} GB</td>
                     <td>
                         <a href="/gpu-models/update/{{ $gpuModel->id }}" class="btn btn-outline-primary btn-sm">Edit</a> /
                         <form method="post" action="/gpu-models/delete/{{ $gpuModel->id }}" class="d-inline deletion-form">

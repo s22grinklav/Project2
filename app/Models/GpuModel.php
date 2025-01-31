@@ -22,6 +22,7 @@ class GpuModel extends Model
         'memory_type',
         'vram',
         'generation_id', // Foreign key for the GPU generation
+        'gpu_architecture_id', // New foreign key for the GPU architecture
     ];
 
     /**
@@ -32,6 +33,16 @@ class GpuModel extends Model
     public function generation(): BelongsTo
     {
         return $this->belongsTo(GpuGeneration::class, 'generation_id'); // 'generation_id' is the foreign key in gpu_models table
+    }
+
+    /**
+     * Get the GPU architecture associated with this model.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function architecture(): BelongsTo
+    {
+        return $this->belongsTo(GpuArchitecture::class, 'gpu_architecture_id'); // 'gpu_architecture_id' is the foreign key in gpu_models table
     }
 
     // Add any additional custom methods or relationships if needed
