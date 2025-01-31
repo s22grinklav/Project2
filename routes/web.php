@@ -5,6 +5,7 @@ use App\Http\Controllers\GpuGenerationController;
 use App\Http\Controllers\GpuModelController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GpuArchitectureController;
+use App\Http\Controllers\GpuDataController;
 
 // Route for HomeController
 Route::get('/', [HomeController::class, 'index']);
@@ -40,4 +41,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/gpu-architectures/{gpuArchitecture}/edit', [GpuArchitectureController::class, 'edit'])->name('gpu-architectures.edit');
     Route::patch('/gpu-architectures/{gpuArchitecture}', [GpuArchitectureController::class, 'update'])->name('gpu-architectures.update');
     Route::delete('/gpu-architectures/{gpuArchitecture}', [GpuArchitectureController::class, 'destroy'])->name('gpu-architectures.delete');
+
+    Route::get('/data/get-top-gpus', [GpuDataController::class, 'getTopGpus']);
+    Route::get('/data/get-gpu/{gpu}', [GpuDataController::class, 'getGpu']);
+    Route::get('/data/get-related-gpus/{gpu}', [GpuDataController::class, 'getRelatedGpus']);
 });
